@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Vue中CSS动画原理</title>
+    <script src="./lib/vue.js"></script>
+    <link rel="stylesheet" href="./lib/animate.css">
+    <style>
+        .fade-enter,
+        .fade-leave-to {
+            opacity: 0;
+        }
+        .fade-enter-active,
+        .fade-leave-active {
+            transition: opacity 3s;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <!-- 这是给它一个appear属性，第一次显示的时候也有动画效果 -->
+        <!-- type="transition" 是让动画时长以transition的动画时常为准，也就是3s -->
+        <!-- :duration="5000" 自定义动画时长为 5s -->
+        <!-- :duration="{ enter: 5000, leave:10000 }" 入场动画时长5s，出场动画时长10s -->
+        <transition 
+            :duration="{ enter: 5000, leave:10000 }"
+            name="fade" 
+            appear  
+            enter-active-class="animated swing fade-enter-active"
+            leave-active-class="animated shake fade-leave-active"
+            appear-active-class="animated swing"
+        >
+            <div v-if="show">Hello world</div>
+        </transition>
+        <button @click="handleClick">切换</button>
+    </div>
+
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                show: true
+            },
+            methods: {
+                handleClick: function() {
+                    this.show = !this.show
+                }
+            }
+        });
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="./lib/vue.js"></script>
+</head>
+<!--  vue 中可以使用set方法像对象中添加元素 -->
+
+<body>
+    <div id="app">
+
+            <!-- Vue.set(vm.userInfo,"address","beijing") -->
+            <!-- vm.$set(vm.userInfo,"address","beijing") -->
+            <div v-for="(item,key,index) of userInfo" :key="item.id">
+                {{item}}---{{key}}---{{index}}
+            </div>
+
+            <!-- Vue.set(vm.list,1,5) -->
+            <!-- vm.$set(vm.list,2,10) -->
+
+            <div v-for="item of list">
+                {{item}}
+            </div>
+    </div>
+
+    <script>
+        var vm = new Vue({
+            el: '#app',
+            data: {
+                userInfo: {
+                    name: "Dell",
+                    age: 28,
+                    gender: "male",
+                    salary: "secret",
+                },
+                list: [1,2,3,4]
+            },
+            methods: {}
+        });
+    </script>
+</body>
+
+</html>
