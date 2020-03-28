@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./lib/vue.js"></script>
+</head>
+<!-- 
+    执行逻辑：
+    当点击(click)时，子组件监听到原生的div标签被点击了，然后向外触发一个自定义事件，而在父组件里监听到了这个自定义事件，所以handleClick被执行
+    1 - 2 - 3 - 4
+ -->
+
+<body>
+  <div id="app">
+    <!-- 给组件绑定原生事件，只要再后面加上.native -->
+    <child @click.native="handleClick"></child> <!-- 3 -->
+    <!-- 在child上绑定的事件属于自定义事件 -->
+  </div>
+
+  <script>
+    Vue.component('child', {
+      template: '<div>Child</div>', //   1
+      //在这里绑定的事件属于原生事件
+      // methods: {
+      //   handleChildClick: function () {
+      //     this.$emit('click') //  2
+      //     //这个方法是用来触发自定义事件的
+      //   }
+      // }
+    })
+    var vm = new Vue({
+      el: '#app',
+      data: {},
+      methods: {
+        handleClick: function () { //4
+          alert('click')
+        }
+      }
+    });
+  </script>
+</body>
+
+</html>

@@ -9,24 +9,24 @@
 </head>
 
 <body>
-  <div id="app">
-    <div v-for="(item,key,index) of userInfo" :key="item.id">
-      {{item}}---{{key}}---{{index}}
-    </div>
+  <div id="app" @click="handleDivClick" :style="[styleObj, {fontSize: '18px'}]">
+    Hello World!
   </div>
 
   <script>
     var vm = new Vue({
       el: '#app',
       data: {
-        userInfo: {
-          name: "Dell",
-          age: 28,
-          gender: "male",
-          salary: "secret",
+        // 内联样式
+        styleObj: {
+          color: "black"
         }
       },
-      methods: {}
+      methods: {
+        handleDivClick: function () {
+          this.styleObj.color = this.styleObj.color === "black" ? "red" : "black";
+        }
+      }
     });
   </script>
 </body>

@@ -10,8 +10,11 @@
 
 <body>
   <div id="app">
-    <div v-for="(item,key,index) of userInfo" :key="item.id">
-      {{item}}---{{key}}---{{index}}
+    <div v-if="show">
+      用户名：<input type="text" key="username">
+    </div>
+    <div v-else>
+      邮箱名：<input type="text" key="password">
     </div>
   </div>
 
@@ -19,12 +22,7 @@
     var vm = new Vue({
       el: '#app',
       data: {
-        userInfo: {
-          name: "Dell",
-          age: 28,
-          gender: "male",
-          salary: "secret",
-        }
+        show: false,
       },
       methods: {}
     });

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./lib/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    {{fullName}}
+    {{age}}
+  </div>
+  <script>
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        firstName: "Dell",
+        lastName: "Lee",
+        age: 24
+      },
+      // 计算属性，内部有一个缓存机制，推荐使用
+      // 有一个缓存机制在里面，当fullName依赖的值没有发生改变就不会重新去计算，如果依赖的值发生了改变就会重新去计算
+      computed: {
+        fullName: function () {
+          console.log("计算了一次")
+          return this.firstName + " " + this.lastName
+        }
+      },
+
+      // 监听器方法，与计算属性方法类似，也有缓存机制，代码比计算属性复杂
+      // watch: {
+      //   firstName: function () {
+      //     console.log("计算了一次")
+      //     this.fullName = this.firstName + " " + this.lastName
+      //   },
+      //   lastName: function () {
+      //     console.log("计算了一次")
+      //     this.fullName = this.firstName + " " + this.lastName
+      //   }
+      // },
+
+      // methods内部没有缓存机制
+      // methods: {
+      //   fullName: function () {
+      //     console.log("计算了一次")
+      //     return this.firstName + " " + this.lastName
+      //   }
+      // }
+    });
+  </script>
+</body>
+
+</html>

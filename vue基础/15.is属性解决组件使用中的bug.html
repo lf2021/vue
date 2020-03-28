@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./lib/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <table>
+      <tbody>
+        <tr is="row" v-for="item of 3"></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    Vue.component("row", {
+      // 在 子组件 中，data必须是一个函数，同时函数里必须以对象的形式返回对应的数据
+      data: function () {
+        return {
+          content: 'this is a content'
+        }
+      },
+      template: '<tr></td>{{content}}</td></tr>'
+    })
+
+    var vm = new Vue({
+      el: '#app'
+    });
+  </script>
+</body>
+
+</html>

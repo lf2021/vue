@@ -10,21 +10,17 @@
 
 <body>
   <div id="app">
-    <div v-for="(item,key,index) of userInfo" :key="item.id">
-      {{item}}---{{key}}---{{index}}
-    </div>
+    <div v-if="show==='a'">This is A</div>
+    <div v-else-if="show==='b'">This is B</div>
+    <div v-else>This is others</div>
   </div>
 
   <script>
     var vm = new Vue({
       el: '#app',
       data: {
-        userInfo: {
-          name: "Dell",
-          age: 28,
-          gender: "male",
-          salary: "secret",
-        }
+        msg: "Hello world",
+        show: 'a',
       },
       methods: {}
     });

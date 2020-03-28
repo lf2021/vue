@@ -10,24 +10,24 @@
 
 <body>
   <div id="app">
-    <div v-for="(item,key,index) of userInfo" :key="item.id">
-      {{item}}---{{key}}---{{index}}
-    </div>
+    <div>{{msg + ' Lee'}}</div>
+    <div v-text="msg + ' Lee'"></div>
+    <div v-html="msg + ' Lee'"></div>
   </div>
-
   <script>
+    /* 
+    模板语法的三种方式：
+    1.插值表达式
+    2.v-text
+    3.v-html
+    */
+
     var vm = new Vue({
       el: '#app',
       data: {
-        userInfo: {
-          name: "Dell",
-          age: 28,
-          gender: "male",
-          salary: "secret",
-        }
-      },
-      methods: {}
-    });
+        msg: '<h1>Hello World</h1>'
+      }
+    })
   </script>
 </body>
 

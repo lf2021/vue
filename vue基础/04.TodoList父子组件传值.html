@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="./lib/vue.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <input type="text" v-model="inputValue" />
+    <button v-on:click="handleBtnClick">submit</button>
+    <ul>
+      <todo-item 
+        v-bind:content="item" 
+        v-bind:index="index" 
+        v-on:delete="handleDelete" 
+        v-for="(item, index) of list"
+      >
+      </todo-item>
+    </ul>
+  </div>
+  <script>
+    var TodoItem = {
+      props: ['content','index'],
+      template: "<li v-on:click='handleItemClick'>{{content}}</li>",
+      methods: {
+        handleItemClick: function () {
+          this.$emit('delete',this.index);
+        }
+      }
+    }
+    var vm = new Vue({
+      el: '#app',
+      components: {
+        TodoItem: TodoItem
+      },
+      data: {
+        list: [],
+        inputValue: '',
+      },
+      methods: {
+        handleBtnClick: function () {
+          this.list.push(this.inputValue);
+          this.inputValue = '';
+        },
+        handleDelete: function (index) {
+          this.list.splice(index, 1);
+        }
+      },
+    })
+  </script>
+</body>
+
+</html>
