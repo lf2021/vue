@@ -6,16 +6,24 @@
 ####  vue
 + v-text
 + v-html
-+ v-model
++ v-model 数据的双向绑定
 + v-bind
+    + 缩写为:
 + v-on
+    + 缩写为@
 + v-for
     + 注意key的使用：
     + key="name"表示是key值是一个字符串"name"
     + :key="name"表示key值是一个JS表达式name
 + v-if  v-else-if  v-else
+    + 直接从DOM上删除创建元素
 + v-show
+    + 利用的是`display: none`的样式
 + v-once
++ 几种样式绑定方法
+    + `:class="{isActivated: activated}"` 参考09
+    + `:class="[activated]"`  参考10
+    + `:style="[styleObj, {fontSize: '18px'}]"` 参考11
 + data属性
     + 如果是在vue实例中，是一个对象
     + 如果实在组件中，是一个函数，并且返回一个对象

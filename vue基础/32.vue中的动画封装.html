@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>vue中的动画封装</title>
+  <script src="./lib/vue.js"></script>
+  <script src="./lib/velocity.js"></script>
+</head>
+
+<body>
+  <div id="app">
+    <fade :show="show">
+      <div>Hello World</div>
+    </fade>
+    <fade :show="show">
+      <h1>Hello World</h1>
+    </fade>
+    <button @click="handleBtnClick">toggle</button>
+  </div>
+  <script>
+    Vue.component('fade', {
+      props: ['show'],
+      template: `
+        <transition
+          @before-enter="handleBeforeEnter"
+          @enter="handleEnter" 
+          @befor-leave="handleBeforeLeave" 
+          @leave="handleLeave"
+        >
+          <slot v-if="show"></slot>
+        </transition>`,
+      methods: {
+        handleBeforeEnter: function (el) {
+          el.style.opacity = 0;
+        },
+        handleEnter: function (el, done) {
+          Velocity(el, {
+            opacity: 1
+          }, {
+            duration: 1000,
+            complete: done
+          })
+        },
+        handleBeforeLeave: function () {
+          el.style.opacity = 1;
+        },
+        handleLeave: function (el, done) {
+          Velocity(el, {
+            opacity: 0
+          }, {
+            duration: 1000,
+            complete: done
+          })
+        }
+      }
+    })
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        show: "true"
+      },
+      methods: {
+        handleBtnClick: function () {
+          this.show = !this.show
+        }
+      },
+    })
+  </script>
+</body>
+
+</html>
