@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="../lib/vue.js"></script>
+  <style>
+    div {
+      box-sizing: border-box;
+      width: 550px;
+      height: 30px;
+      background-color: orange;
+      line-height: 30px;
+      border: 1px solid #fff;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid orange;
+    }
+
+    thead {
+      background-color: orange;
+    }
+
+    th {
+      border: 1px solid #fff;
+    }
+
+    th,
+    td {
+      text-align: center;
+      line-height: 30px;
+      border: 0.5px dashed orange;
+    }
+
+    .number {
+      width: 550px;
+      height: 30px;
+      background-color: orange;
+      line-height: 30px;
+      border: 1px solid #fff;
+      text-align: center;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="grid">
+      <div>
+        <span>编号：</span>
+        <input type="text" v-model="id" :disabled="flag" v-focus>
+        <span>名称</span>
+        <input type="text" v-model="name">
+        <input type="submit" @click="handleClick" value="提交" :disabled="submitFlag">
+      </div>
+
+      <div class="number">
+        图书数量为：{{total}}
+      </div>
+      <table cellspadding="0" cellspacing="0">
+        <thead>
+          <tr>
+            <th>编号</th>
+            <th>名称</th>
+            <th>时间</th>
+            <th>操作</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(item,index) of list" :key="index">
+            <td>{{item.id}}</td>
+            <td>{{item.name}}</td>
+            <td>{{item.time | dateFormat}}</td>
+            <td>
+              <a href="" @click.prevent="toEdit(item.id)">修改</a>|
+              <a href="" @click.prevent="deleteBook(item.id)">删除</a>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+  <script>
+    // 过滤器
+    Vue.filter('dateFormat', function (dateStr, time) {
+      //得到特定的时间
+      var date = new Date(parseInt(dateStr));
+      var year = date.getFullYear();
+      //ES6语法填充：var month = (date.getMonth()+1).toString().padStart(2, '0');
+      var month = date.getMonth() + 1 < 10 ? '0' + (date.getMonth() + 1) : date.getMonth() + 1;
+      var day = date.getDate() < 10 ? '0' + date.getDate() : date.getDate();
+      var hh = date.getHours() < 10 ? '0' + date.getHours() : date.getHours();
+      var mm = date.getMinutes() < 10 ? '0' + date.getMinutes() : date.getMinutes();
+      var ss = date.getSeconds() < 10 ? '0' + date.getSeconds() : date.getSeconds();
+
+      //return `${year}-${month}-${day}`;
+
+      if (time && time.toLowerCase() === 'yyyy-mm-dd') {
+        return `${year}-${month}-${day}`;
+      } else if (time && time.toLowerCase() === 'hh:mm:ss') {
+        return `${hh}:${mm}:${ss}`;
+      } else {
+        return `${year}-${month}-${day} ${hh}:${mm}:${ss}`;
+      }
+    });
+
+    // 自定义属性
+    Vue.directive('focus', {
+      inserted: function (el) {
+        el.focus();
+      }
+    });
+
+    var vm = new Vue({
+      el: '#app',
+      data: {
+        flag: false,
+        submitFlag: false,
+        id: '',
+        name: '',
+        time: '',
+        list: []
+      },
+      methods: {
+        handleClick: function () {
+          if (this.flag) { // 修改
+            this.list.some(item => {
+              if (item.id === this.id) {
+                item.name = this.name;
+              }
+            })
+          } else { // 添加数据
+            var book = {};
+            book.id = this.id;
+            book.name = this.name;
+            book.time = new Date().getTime();
+            this.list.push(book);
+          }
+          this.flag = false;
+          this.id = '';
+          this.name = '';
+        },
+        toEdit: function (id) {
+          // 禁止修改id
+          this.flag = true;
+          var book = this.list.filter(obj => obj.id === id);
+          this.id = book[0].id;
+          this.name = book[0].name;
+        },
+        deleteBook: function (id) {
+          // 删除
+          var index = this.list.findIndex(item => {
+            return item.id === id;
+          });
+          this.list.splice(index, 1);
+        }
+      },
+      computed: {
+        total: function () {
+          return this.list.length;
+        }
+      },
+      watch: {
+        name: function (value) {
+          var flag = this.list.some(item => {
+            return item.name === value;
+          });
+          if (flag) {
+            this.submitFlag = true;
+          } else {
+            this.submitFlag = false;
+          }
+        }
+      },
+      mounted: function () {
+        // 一般此时用于获取后台数据，然后把数据填充到模板
+        var data = [{
+          id: 1,
+          name: '三国演义',
+          time: '995252525252'
+        }, {
+          id: 2,
+          name: '水浒传',
+          time: '995252525252'
+        }, {
+          id: 3,
+          name: '红楼梦',
+          time: '995252525252'
+        }, {
+          id: 4,
+          name: '西游记',
+          time: '995252525252'
+        }];
+        this.list = data;
+      }
+    })
+  </script>
+</body>
+
+</html>

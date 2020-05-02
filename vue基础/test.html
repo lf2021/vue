@@ -6,34 +6,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script src="./lib/vue.js"></script>
-
 </head>
 
 <body>
   <div id="app">
-    <div>{{date | format('yyyy-mm-dd hh:mm:ss')}}</div>
+    <button-counter></button-counter>
+    <my-component></my-component>
   </div>
   <script>
-    var vm = new Vue({
-      el: '#app',
-      data: {
-        date: new Date()
+    var MyComponent = {
+      data: function () {
+        return {
+          msg: "Hello World"
+        }
       },
-      filters: {
-        format: function (value, arg) {
-          if (arg === 'yyyy-mm-dd hh:mm:ss') {
-            var ret = '';
-            var m = (value.getMonth() + 1).toString().padStart(2, '0');
-            var d = value.getDate().toString().padStart(2, '0');
-            var hh = value.getHours().toString().padStart(2, '0');
-            var mm = value.getMinutes().toString().padStart(2, '0');
-            var ss = value.getSeconds().toString().padStart(2, '0')
-            ret += value.getFullYear() + '-' + m + '-' + d + ' ' + hh + ':' + mm + ':' + ss;
-            return ret
-          }
+      template: `
+        <div>{{msg}}</div>
+      `
+    };
+    var buttonCounter = {
+      data: function () {
+        return {
+          count: 0
+        }
+      },
+      template: `
+        <div>
+          <button @click="handleClick">点击了{{count}}次</button>
+        </div>
+      `,
+      methods: {
+        handleClick: function () {
+          this.count += 2;
         }
       }
-
+    }
+    var vm = new Vue({
+      el: '#app',
+      components: {
+        'MyComponent': MyComponent,
+        'buttonCounter': buttonCounter
+      }
     })
   </script>
 </body>
