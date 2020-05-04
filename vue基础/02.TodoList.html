@@ -10,7 +10,7 @@
 
 <body>
   <div id="app">
-    <input type="text" v-model="inputValue"/>
+    <input type="text" v-model="inputValue" />
     <button v-on:click="handleBtnClick">submit</button>
     <ul>
       <li v-for="item in list">{{item}}</li>
@@ -24,9 +24,9 @@
         inputValue: '',
       },
       methods: {
-        handleBtnClick: function () {  
+        handleBtnClick: function () {
           this.list.push(this.inputValue);
-          this.inputValue='';
+          this.inputValue = '';
         }
       },
     })

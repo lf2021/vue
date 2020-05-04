@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <script src="../lib/vue.js"></script>
+  <style>
+    .container {
+      position: absolute;
+      top: 20%;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+
+    .title {
+      width: 400px;
+      height: 50px;
+      background-color: lightblue;
+      font-size: 25px;
+      line-height: 50px;
+      text-align: center;
+    }
+
+    li {
+      list-style: none;
+    }
+
+    .list ul {
+      margin: 0;
+      padding: 0;
+    }
+
+    .list input {
+      width: 50px;
+      height: 25px;
+      text-align: center;
+      line-height: 50px;
+    }
+
+    .list li {
+      box-sizing: border-box;
+      width: 400px;
+      height: 50px;
+      line-height: 50px;
+      font-size: 25px;
+      border-bottom: 1px solid blue;
+      position: relative;
+    }
+
+    .list a {
+      text-decoration: none;
+      display: inline-block;
+      text-align: center;
+      width: 30px;
+      height: 30px;
+      line-height: 30px;
+      background-color: #ccc;
+      margin: 5px;
+    }
+
+    .good {
+      float: left;
+      width: 150px;
+    }
+
+    .del {
+      margin: 5px;
+      float: right;
+      width: 40px;
+      height: 40px;
+      line-height: 50px;
+      font-size: 30px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .del:hover {
+      text-align: center;
+      background-color: orange;
+    }
+
+    .total {
+      width: 400px;
+      height: 50px;
+      background-color: orange;
+      font-size: 25px;
+      line-height: 50px;
+      text-align: center;
+      position: relative;
+    }
+
+    .total input {
+      font-size: 25px;
+      width: 80px;
+      height: 40px;
+      background-color: red;
+      border: 0;
+      position: absolute;
+      right: 5px;
+      bottom: 5px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app">
+    <div class="container">
+      <my-cart></my-cart>
+    </div>
+  </div>
+  <script>
+    var cartTitle = {
+      props: ['uname'],
+      template: `
+        <div class="title">{{uname}}的商品</div>
+      `
+    };
+
+    var cartList = {
+      props: ['list'],
+      template: `
+        <div class="list">
+          <ul>
+            <li v-for="item of list" :key="item.id">
+              <div class="good">{{item.name}}</div>
+              <a href="" @click.prevent="subtract(item.id)">-</a>
+              <input 
+                type="text" 
+                :value="item.num" 
+                @blur="changeNum(item.id, $event)"
+              >
+              <a href="" @click.prevent="add(item.id)">+</a>
+              <div class="del" @click="handleDelete(item.id)">×</div>
+            </li>
+          </ul>
+        </div>
+      `,
+      methods: {
+        subtract: function (id) {
+          this.$emit('change-num', {
+            id: id,
+            type: 'subtract'
+          });
+        },
+        add: function (id) {
+          this.$emit('change-num', {
+            id: id,
+            type: 'add'
+          });
+        },
+        changeNum: function (id, event) {
+          // console.log(id, event.target.value);
+          this.$emit('change-num', {
+            id: id,
+            type: 'change',
+            num: event.target.value
+          })
+        },
+        handleDelete: function (id) {
+          this.$emit('cart-del', id)
+        }
+      },
+    };
+
+    var cartTotal = {
+      props: ['list'],
+      template: `
+        <div class="total">
+          <span>总价:{{total}}</span>
+          <input type="button" value="结算">
+        </div>
+      `,
+      computed: {
+        total: function () {
+          var total = 0;
+          this.list.forEach(item => {
+            total += item.price * item.num;
+          })
+          return total
+        }
+      }
+    }
+    Vue.component('my-cart', {
+      data: function () {
+        return {
+          uname: 'Lee',
+          list: [{
+            id: 1,
+            name: 'TCL',
+            price: 1000,
+            num: 1
+          }, {
+            id: 2,
+            name: '机顶盒',
+            price: 1000,
+            num: 1
+          }, {
+            id: 3,
+            name: 'Haier',
+            price: 1000,
+            num: 1
+          }, {
+            id: 4,
+            name: '小米',
+            price: 1000,
+            num: 1
+          }, {
+            id: 5,
+            name: 'PPTV',
+            price: 1000,
+            num: 2
+          }]
+        }
+      },
+      template: `
+        <div class="cart">
+          <cart-title :uname="uname"></cart-title>
+          <cart-list 
+            :list="list" 
+            @cart-del="del($event)" 
+            @change-num="changeNum($event)"
+            @cart-subtract="subtract($event)"
+            @cart-add="add()"
+          >
+          </cart-list>
+          <cart-total :list="list"></cart-total>
+        </div>
+      `,
+      components: {
+        'cart-title': cartTitle,
+        'cart-list': cartList,
+        'cart-total': cartTotal
+      },
+      methods: {
+        changeNum: function (val) {
+          // 根据子组件传过来的值更新list中对应的数据 
+          if (val.type === "change") {
+            this.list.some(item => {
+              if (item.id === val.id) {
+                item.num = val.num;
+                // 终止遍历 (some语法的规则)
+                return true
+              }
+            })
+          } else if (val.type === 'subtract') {
+            this.list.some(item => {
+              if (item.id === val.id) {
+                item.num -= 1;
+                // 判断个数是否为0，为0就删除掉这一行
+                if (item.num === 0) {
+                  var index = this.list.findIndex(item => {
+                    return item.id === val.id;
+                  });
+                  this.list.splice(index, 1);
+                }
+                // 终止遍历
+                return true;
+              }
+            });
+          } else {
+            this.list.some(item => {
+              if (item.id === val.id) {
+                // 解决先修改文本框再加减的bug，因为先修改文本框再加减后item.name是string类型
+                item.num = parseInt(item.num);
+                item.num += 1;
+                // 终止遍历
+                return true;
+              }
+            })
+          }
+
+        },
+        del: function (id) {
+          var index = this.list.findIndex(item => {
+            return item.id === id;
+          });
+          this.list.splice(index, 1);
+        }
+      }
+    })
+    var vm = new Vue({
+      el: '#app'
+    })
+  </script>
+</body>
+
+</html>

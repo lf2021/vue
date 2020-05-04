@@ -6,46 +6,47 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <script src="./lib/vue.js"></script>
+  <style>
+    .current {
+      color: orange;
+    }
+  </style>
 </head>
 
 <body>
   <div id="app">
-    <button-counter></button-counter>
-    <my-component></my-component>
+    <fruit-list :list="list">
+      <template slot-scope="slotProps">
+        <strong v-if="slotProps.info.id===3" class="current">{{slotProps.info.name}}</strong>
+        <span v-else>{{slotProps.info.name}}</span>
+      </template>
+    </fruit-list>
   </div>
   <script>
-    var MyComponent = {
-      data: function () {
-        return {
-          msg: "Hello World"
-        }
-      },
-      template: `
-        <div>{{msg}}</div>
-      `
-    };
-    var buttonCounter = {
-      data: function () {
-        return {
-          count: 0
-        }
-      },
+    Vue.component('fruit-list', {
+      props: ['list'],
       template: `
         <div>
-          <button @click="handleClick">点击了{{count}}次</button>
+          <li :key="item.id" v-for="item in list">
+            <slot :info="item">{{item.name}}</slot>
+          </li>
         </div>
-      `,
-      methods: {
-        handleClick: function () {
-          this.count += 2;
-        }
-      }
-    }
+      `
+    });
+
     var vm = new Vue({
       el: '#app',
-      components: {
-        'MyComponent': MyComponent,
-        'buttonCounter': buttonCounter
+      data: {
+        list: [{
+          id: 1,
+          name: 'apple'
+        }, {
+          id: 2,
+          name: 'orange'
+        }, {
+          id: 3,
+          name: 'banans'
+        }]
       }
     })
   </script>
