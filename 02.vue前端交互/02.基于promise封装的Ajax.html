@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>This is the title</title>
+</head>
+
+<body>
+  <script>
+    // 基于promise处理Ajax请求
+    function myAjax(url) {
+      return new Promise(function (resolve, reject) {
+        var xhr = new XMLHttpRequest();
+        // 创建 Http 请求
+        xhr.open('get', url);
+        xhr.onreadystatechange = function () {
+          if (xhr.readyState !== 4) return;
+          if (xhr.readyState === 4 && xhr.status === 200) {
+            // 处理正常的情况
+            resolve(xhr.responseText);
+          } else {
+            // 处理异常情况
+            reject("服务器错误");
+          }
+        }
+        // 发送HTTP请求
+        xhr.send(null);
+      })
+    }
+
+
+    myAjax(url)
+      .then(function (data) {
+        console.log(data);
+      }, function (info) {
+        console.log(info);
+      })
+
+    // =================================
+    // 发送多个ajax请求并且保证顺序,解决回调地狱问题
+    myAjax(url)
+      .then(function (data) {
+        console.log(data);
+        return myAjax(url1)
+      })
+      .then(function (data) {
+        console.log(data);
+        return myAjax(url2)
+      })
+      .then(function (data) {
+        console.log(data);
+      })
+  </script>
+</body>
+
+</html>

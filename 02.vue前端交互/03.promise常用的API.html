@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>This is the title</title>
+</head>
+
+<body>
+  <script>
+    /* 
+    Promise.all() 并发处理多个异步任务，所有任务都执行完才能得到结果
+    Promise.race() 并发处理多个异步任务，只要有一个任务执行完就能得到结果 
+    */
+
+    var p1 = new Promise(function(resolve, reject){
+      setTimeout(function(){
+        resolve(1);
+      },1000)
+    });
+    p1.then(function(data){
+      console.log(data);
+    })
+    var p2 = new Promise(function(resolve, reject){
+      setTimeout(function(){
+        resolve(2);
+      },2000)
+    });
+    p2.then(function(data){
+      console.log(data);
+    })
+    var p3 = new Promise(function(resolve, reject){
+      setTimeout(function(){
+        resolve(3);
+      },3000)
+    });
+    p3.then(function(data){
+      console.log(data);
+    })
+     
+    // Promise.all([p1,p2,p3]).then(function(result){
+    //   console.log(result); // [1, 2, 3]
+    // })
+
+
+    Promise.race([p1,p2,p3]).then(function(result){
+      console.log(result); // 1
+    })
+  </script>
+</body>
+
+</html>
