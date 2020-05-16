@@ -1,16 +1,16 @@
 # 通过 babel 体验 ES6 模块化
 
-## 配置 babel 的步骤：
+## 配置 babel 的步骤
 
 ### 第一步
 
-```
+```npm
 npm install --save-dev @babel/core @babel/cli @babel/preset-env @babel/node
 ```
 
 ### 第二步
 
-```
+```npm
 npm install --save @babel/polyfill
 ```
 
@@ -56,6 +56,7 @@ module.exports = { presets }
 举例：
 
 m1.js
+
 ```js
 let a = 10
 let c = 20
@@ -71,17 +72,21 @@ export default {
   show
 }
 ```
+
 index.js
+
 ```js
 import m1 from './m1.js'
 
 console.log(m1);
 ```
+
 通过`npx babel-node .\index.js`输出
 
-```
+```js
 { a: 10, c: 20, show: [Function: show] }
 ```
+
 ## 按需导出 与 按需导入
 
 1. 按需导出语法 `export let s1 = 10`
@@ -104,7 +109,9 @@ export function say() {
   console.log('oooooo')
 }
 ```
+
 index.js
+
 ```js
 import {s1, s2 as ss2, say} from './m1.js'
 
@@ -112,13 +119,15 @@ console.log(s1);
 console.log(ss2);
 console.log(say);
 ```
+
 通过`npx babel-node .\index.js`输出
 
-```
+```js
 aaa
 ccc
 [Function: say]
 ```
+
 ## 直接导入并执行模块代码
 
 m2.js
@@ -137,7 +146,7 @@ import './m2.js'
 
 通过`npx babel-node .\index.js`输出
 
-```
+```js
 0
 1
 2
