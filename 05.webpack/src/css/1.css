@@ -1,3 +1,13 @@
-li{
+li {
   list-style: none;
+}
+
+::placeholder {
+  color: red;
+}
+
+#box {
+  width: 200px;
+  height: 124px;
+  background: url('../images/1.jpg');
 }

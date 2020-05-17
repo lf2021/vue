@@ -153,3 +153,143 @@ loader加载器可以协助webpack打包处理特定的文件模块，比如：
     注意：
     - use数组中指定的 loader顺序是固定的
     - 多个loader的调用顺序是：从后往前调用
+
+#### 打包处理lcss文件
+
+1. 运行 `npm i less-loader less -D` 命令
+2. 在`webpack.config.js` 的 `module` -> `rules` 数组中，添加 loader 规则如下：
+
+    ```js
+    // 所有第三方文件模块的匹配规则
+    module: {
+      rules: [
+        { test: /\.less$/, use: ['style-loader', 'css-loader', 'less-loader'] }
+      ]
+    }
+    ```
+
+#### 打包处理scss文件
+
+1. 运行 `npm i sass-loader node-sass -D` 命令，安装处理css文件的loader
+2. 在`webpack.config.js` 的 `module` -> `rules` 数组中，添加 loader 规则如下
+
+    ```js
+    // 所有第三方文件模块的匹配规则
+    module: {
+      rules: [
+        { test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader'] }
+      ]
+    }
+    ```
+
+##### 安装node-sass可能会出现问题
+
+```js
+Downloading binary from https://github.com/sass/node-sass/releases/download/v4.14.1/win32-x64-72_binding.node
+Cannot download "https://github.com/sass/node-sass/releases/download/v4.14.1/win32-x64-72_binding.node":
+
+ESOCKETTIMEDOUT
+
+Hint: If github.com is not accessible in your location
+      try setting a proxy via HTTP_PROXY, e.g.
+
+      export HTTP_PROXY=http://example.com:1234
+
+or configure npm proxy via
+
+      npm config set proxy http://example.com:8080
+```
+
+原因是由于网络限制导致无法下载 .node 文件，解决方法如下：
+
+使用淘宝镜像，使用镜像前请把node_modules文件夹下原有的node-sass有关的文件全删了
+
+```js
+npm set sass_binary_site = http://npm.taobao.org/mirrors/node-sass/
+
+npm install -g cnpm --registry = http://registry.npm.taobao.org
+
+cnpm install node-sass
+```
+
+##### 第三步运行可能会碰到如下问题
+
+```js
+cnpm : 无法加载文件 D:\Softwares\nodejs\node_global\cnpm.ps1，因为在此系统上禁止运行脚本。有关详细信息，请参阅 https:/go.microsoft.com/fwlink/?LinkID=135170 中的 about_Execution_Po
+licies。
+所在位置 行:1 字符: 1
++ cnpm install node-sass
++ ~~~~
+    + CategoryInfo          : SecurityError: (:) []，PSSecurityException
+    + FullyQualifiedErrorId : UnauthorizedAccess
+```
+
+这是说是没有权限，需要用管理员身份进行运行并授权
+解决方法：
+
+打开本地的 Windows PowerShell，以管理员身份运行：
+
+```js
+set-ExecutionPolicy RemoteSigned
+
+再输入 Y 即可
+```
+
+#### 配置 postCSS 自动添加 css 的兼容前缀
+
+1. 运行 `npm i postcss-loader autoprefixer -D` 命令
+2. 在项目根目录中创建 postcss 的配置文件 postcss.config.js，并初始化如下配置：
+
+    ```js
+    const autoprefixer = require('autoprefixer') // 导入自动添加前缀的插件
+    module.exports = {
+      plugins: [ autoprefixer ] // 挂载插件
+    }
+    ```
+
+3. 在 `webpack.config.js` 的 `module -> rules` 数组中，修改 css 的loader规则如下：
+
+    ```js
+    module: {
+      rules: [
+        { test: /\.css/, use: ['style-loader', 'css-loader', 'postcss-loader'] }
+      ]
+    }
+    ```
+
+#### 打包样式表中的图片和字体文件
+
+1. 运行 `npm i url-loader file-loader -D` 命令
+2. 在 `webpack.config.js`·的 `module -> rules` 数组中，添加loader规则如下：
+
+    ```js
+    module: {
+      rules: [
+        { test: /\.jpg|png|gif|ttf|eot|svg|woff|woff2$/,
+        use: 'url-loader?limit=16940'}
+      ]
+    }
+    ```
+
+    其中 ? 之后是 loader 的参数项
+    limit 用来指定图片的大小，单位是字节(byte)，只有小于limit大小的图片，才会被转为base64图片
+
+#### 打包处理js文件中的高级语法
+
+1. 安装babel转换器相关的包： `npm i babel-loader @babel/core @babel/runtime -D`
+2. 安装babel语法插件相关的包： `npm i @babel/preset-env @babel/plugin-transform-runtime @babel/plugin-proposal-class-properties -D`
+3. 在项目根目录中，创建babel配置文件`babel.config.js`并初始化基本配置如下：
+
+    ```js
+    module.exports = {
+      presets: ['@babel/preset-env'],
+      plugins: ['@babel/plugin-transform-runtime', '@babel/plugin-proposal-class-properties']
+    }
+    ```
+
+4. 在 `webpack.config.js`的module -> rules 数组中，添加loader规则如下：
+
+```js
+// exclude为排除项，表示babel-loader不需要处理node_modules中的js文件
+{test: /\.js$/, use: 'babel-loader', exclude: /node_modules/}
+```

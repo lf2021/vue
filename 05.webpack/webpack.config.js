@@ -17,7 +17,11 @@ module.exports = {
   plugins: [ htmlPlugin ], // plugins数组是 webpack 打包期间会用到的一些插件列表
   module: {
     rules: [
-      { test: /\.css$/, use: ['style-loader', 'css-loader'] }
+      { test: /\.css$/, use: ['style-loader', 'css-loader', 'postcss-loader'] },
+      { test: /\.less$/, use: ['style-loader', 'css-loader', 'less-loader'] },
+      { test: /\.scss$/, use: ['style-loader', 'css-loader', 'sass-loader'] },
+      { test: /\.jpg|png|gif|ttf|eot|svg|woff|woff2$/, use: 'url-loader?limit=7112'},
+      {test: /\.js$/, use: 'babel-loader', exclude: /node_modules/}
     ]
   }
 }
